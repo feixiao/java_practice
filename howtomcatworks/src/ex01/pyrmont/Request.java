@@ -3,6 +3,7 @@ package ex01.pyrmont;
 import java.io.IOException;
 import java.io.InputStream;
 
+
 /**
  * Created by frank on 2016/7/17.
  */
@@ -50,4 +51,6 @@ public class Request {
     public String getUri() {
         return uri;
     }
+
+
 }

@@ -1,6 +1,5 @@
-package ex01.pyrmont;
+package ex02.pyrmont;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,36 +10,34 @@ import java.net.Socket;
 /**
  * Created by frank on 2016/7/17.
  */
-public class HttpServer {
-    public static  final String WEB_ROOT =
-            System.getProperty("user.dir") + File.separator + "webroot";
-
-    private static final String SHUTDOWN_COMMAND = "/SHUTDOWN";
+public class HttpServer1 {
+    private static final String SHUTDOWN_COMMAND = "SHUTDOWN";
 
     private boolean shutdown = false;
 
+
     public static void main(String[] args) {
-        HttpServer server = new HttpServer();
+        HttpServer1 server  = new HttpServer1();
         server.await();
     }
 
     public void await() {
-        ServerSocket serverSocket = null;
+        ServerSocket serverSocket =  null;
         int port = 8080;
         try {
             serverSocket = new ServerSocket(port,1, InetAddress.getByName("127.0.0.1"));
+
         }catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
 
-        // 循环等待请求
-        while(!shutdown) {
+        while (!shutdown) {
             Socket socket = null;
             InputStream input = null;
             OutputStream output = null;
 
-            try {
+            try{
                 socket = serverSocket.accept();
                 input = socket.getInputStream();
                 output = socket.getOutputStream();
@@ -50,21 +47,28 @@ public class HttpServer {
 
                 Response response = new Response(output);
                 response.setRequest(request);
-                response.sendStaticResource();
 
-                socket.close();
-
+                // 判断资源的请求类型
                 String url = request.getUri();
-                if (url != null){
-                    shutdown = url.equals(SHUTDOWN_COMMAND);
+                if (url == null) {
+                    socket.close();
+                    continue;
                 }
 
+                if (url.startsWith("/servlet")) {
+                    ServletProcessor1 processor1 = new ServletProcessor1();
+                    processor1.process(request,response);
+                }else {
+                    StaticResoureProcessor processor = new StaticResoureProcessor();
+                    processor.process(request, response);
+                }
+
+                socket.close();
+                shutdown = url.equals(SHUTDOWN_COMMAND);
             }catch (Exception e) {
                 e.printStackTrace();
-                continue;
+                System.exit(1);
             }
         }
-
     }
-
 }
