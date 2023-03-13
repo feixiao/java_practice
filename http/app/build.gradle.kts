@@ -22,6 +22,8 @@ dependencies {
 
     // This dependency is used by the application.
     implementation("com.google.guava:guava:30.1.1-jre")
+    implementation("org.apache.httpcomponents:httpclient:4.5.2")
+    implementation("com.alibaba:fastjson:1.2.76")
 }
 
 application {
