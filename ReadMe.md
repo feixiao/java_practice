@@ -21,6 +21,10 @@ gradle init
 ./gradlew run
 ```
 
+#### Todo
+
+- [ ] VSC 如何自动导入包
+
 #### 参考资料
 
 - [《Gradle》](https://docs.gradle.org/current/samples/sample_building_java_applications.html)
